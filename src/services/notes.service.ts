@@ -1,4 +1,6 @@
-const notes = [
+import { Note } from "../models/note.model";
+
+const notes: Note[] = [
   {
     id: 1,
     title: "Learn TypeScript",
