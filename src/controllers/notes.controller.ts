@@ -1,62 +1,95 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import * as notesService from "../services/notes.service";
+import { AppError } from "../errors/AppError";
 
-export const getAllNotes = (req: Request, res: Response): void => {
-  const notes = notesService.getAllNotes();
+export const getAllNotes = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  try {
+    const notes = notesService.getAllNotes();
 
-  res.json(notes);
-};
-
-export const getNoteById = (req: Request, res: Response): void => {
-  const id = Number(req.params.id);
-
-  const note = notesService.getNoteById(id);
-
-  if (!note) {
-    res.status(404).json({
-      message: "Note not found",
-    });
-    return;
+    res.json(notes);
+  } catch (error) {
+    next(error);
   }
-
-  res.json(note);
 };
 
-export const createNote = (req: Request, res: Response): void => {
-  const { title, content } = req.body;
+export const getNoteById = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  try {
+    const id = Number(req.params.id);
 
-  const newNote = notesService.createNote(title, content);
+    const note = notesService.getNoteById(id);
 
-  res.status(201).json(newNote);
-};
+    if (!note) {
+      throw new AppError("Note not found", 404);
+    }
 
-export const updateNote = (req: Request, res: Response): void => {
-  const id = Number(req.params.id);
-  const { title, content } = req.body;
-
-  const updatedNote = notesService.updateNote(id, title, content);
-
-  if (!updatedNote) {
-    res.status(404).json({
-      message: "Note not found",
-    });
-    return;
+    res.json(note);
+  } catch (error) {
+    next(error);
   }
-
-  res.json(updatedNote);
 };
 
-export const deleteNote = (req: Request, res: Response): void => {
-  const id = Number(req.params.id);
+export const createNote = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  try {
+    const { title, content } = req.body;
 
-  const deleted = notesService.deleteNote(id);
+    const newNote = notesService.createNote(title, content);
 
-  if (!deleted) {
-    res.status(404).json({
-      message: "Note not found",
-    });
-    return;
+    res.status(201).json(newNote);
+  } catch (error) {
+    next(error);
   }
+};
 
-  res.status(204).send();
+export const updateNote = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  try {
+    const id = Number(req.params.id);
+
+    const { title, content } = req.body;
+
+    const updatedNote = notesService.updateNote(id, title, content);
+
+    if (!updatedNote) {
+      throw new AppError("Note not found", 404);
+    }
+
+    res.json(updatedNote);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteNote = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  try {
+    const id = Number(req.params.id);
+
+    const deleted = notesService.deleteNote(id);
+
+    if (!deleted) {
+      throw new AppError("Note not found", 404);
+    }
+
+    res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
 };

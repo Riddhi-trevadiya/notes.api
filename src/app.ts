@@ -1,14 +1,14 @@
 import express from "express";
-import notesRouter from "./routes/notes.routes";
+
+import notesRoutes from "./routes/notes.routes";
+import { errorHandler } from "./middleware/errorHandler";
 
 const app = express();
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Welcome to Notes API 🚀");
-});
+app.use("/notes", notesRoutes);
 
-app.use("/notes", notesRouter);
+app.use(errorHandler);
 
 export default app;
