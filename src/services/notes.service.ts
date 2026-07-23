@@ -1,63 +1,68 @@
-import { Note } from "../models/note.model";
+import { prisma } from "../lib/prisma";
+import { AppError } from "../errors/AppError";
 
-const notes: Note[] = [
-  {
-    id: 1,
-    title: "Learn TypeScript",
-    content: "Finish interfaces today",
-  },
-  {
-    id: 2,
-    title: "Learn Express",
-    content: "Build Notes API",
-  },
-];
-
-export const getAllNotes = () => {
-  return notes;
+export const getAllNotes = async () => {
+  return await prisma.note.findMany();
 };
 
-export const getNoteById = (id: number) => {
-  return notes.find((note) => note.id === id);
+export const getNoteById = async (id: number) => {
+  return await prisma.note.findUnique({
+    where: {
+      id,
+    },
+  });
 };
 
-export const createNote = (title: string, content: string) => {
-  const newNote = {
-    id: notes.length + 1,
-    title,
-    content,
-  };
-
-  notes.push(newNote);
-
-  return newNote;
+export const createNote = async (
+  title: string,
+  content: string
+) => {
+  return await prisma.note.create({
+    data: {
+      title,
+      content,
+    },
+  });
 };
 
-export const updateNote = (
+export const updateNote = async (
   id: number,
   title: string,
   content: string
 ) => {
-  const note = notes.find((note) => note.id === id);
+  try {
+    return await prisma.note.update({
+      where: {
+        id,
+      },
+      data: {
+        title,
+        content,
+      },
+    });
+  } catch (error: any) {
+    if (error.code === "P2025") {
+      throw new AppError("Note not found", 404);
+    }
 
-  if (!note) {
-    return undefined;
+    throw error;
   }
-
-  note.title = title;
-  note.content = content;
-
-  return note;
 };
 
-export const deleteNote = (id: number) => {
-  const index = notes.findIndex((note) => note.id === id);
+export const deleteNote = async (id: number) => {
+  const existingNote = await prisma.note.findUnique({
+    where: {
+      id,
+    },
+  });
 
-  if (index === -1) {
-    return false;
+  if (!existingNote) {
+    throw new AppError("Note not found", 404);
   }
 
-  notes.splice(index, 1);
-
-  return true;
+  return await prisma.note.delete({
+    where: {
+      id,
+    },
+  });
 };

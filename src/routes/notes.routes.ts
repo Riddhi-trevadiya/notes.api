@@ -9,17 +9,18 @@ import {
 } from "../controllers/notes.controller";
 
 import { validateNote } from "../middleware/validateNote";
+import { validateId } from "../middleware/validateId";
 
 const router = Router();
 
 router.get("/", getAllNotes);
 
-router.get("/:id", getNoteById);
+router.get("/:id", validateId, getNoteById);
 
 router.post("/", validateNote, createNote);
 
-router.put("/:id", validateNote, updateNote);
+router.put("/:id", validateId, validateNote, updateNote);
 
-router.delete("/:id", deleteNote);
+router.delete("/:id", validateId, deleteNote);
 
 export default router;

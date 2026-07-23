@@ -2,13 +2,13 @@ import { Request, Response, NextFunction } from "express";
 import * as notesService from "../services/notes.service";
 import { AppError } from "../errors/AppError";
 
-export const getAllNotes = (
+export const getAllNotes = async (
   req: Request,
   res: Response,
   next: NextFunction
-): void => {
+): Promise<void> => {
   try {
-    const notes = notesService.getAllNotes();
+    const notes = await notesService.getAllNotes();
 
     res.json(notes);
   } catch (error) {
@@ -16,15 +16,15 @@ export const getAllNotes = (
   }
 };
 
-export const getNoteById = (
+export const getNoteById = async (
   req: Request,
   res: Response,
   next: NextFunction
-): void => {
+): Promise<void> => {
   try {
     const id = Number(req.params.id);
 
-    const note = notesService.getNoteById(id);
+    const note = await notesService.getNoteById(id);
 
     if (!note) {
       throw new AppError("Note not found", 404);
@@ -36,15 +36,15 @@ export const getNoteById = (
   }
 };
 
-export const createNote = (
+export const createNote = async (
   req: Request,
   res: Response,
   next: NextFunction
-): void => {
+): Promise<void> => {
   try {
     const { title, content } = req.body;
 
-    const newNote = notesService.createNote(title, content);
+    const newNote = await notesService.createNote(title, content);
 
     res.status(201).json(newNote);
   } catch (error) {
@@ -52,21 +52,21 @@ export const createNote = (
   }
 };
 
-export const updateNote = (
+export const updateNote = async (
   req: Request,
   res: Response,
   next: NextFunction
-): void => {
+): Promise<void> => {
   try {
     const id = Number(req.params.id);
 
     const { title, content } = req.body;
 
-    const updatedNote = notesService.updateNote(id, title, content);
-
-    if (!updatedNote) {
-      throw new AppError("Note not found", 404);
-    }
+    const updatedNote = await notesService.updateNote(
+      id,
+      title,
+      content
+    );
 
     res.json(updatedNote);
   } catch (error) {
@@ -74,19 +74,15 @@ export const updateNote = (
   }
 };
 
-export const deleteNote = (
+export const deleteNote = async (
   req: Request,
   res: Response,
   next: NextFunction
-): void => {
+): Promise<void> => {
   try {
     const id = Number(req.params.id);
 
-    const deleted = notesService.deleteNote(id);
-
-    if (!deleted) {
-      throw new AppError("Note not found", 404);
-    }
+    await notesService.deleteNote(id);
 
     res.status(204).send();
   } catch (error) {
