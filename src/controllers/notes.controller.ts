@@ -42,9 +42,13 @@ export const createNote = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { title, content } = req.body;
+    const { title, content, userId } = req.body;
 
-    const newNote = await notesService.createNote(title, content);
+    if (!userId) {
+      throw new AppError("userId is required", 400);
+    }
+
+    const newNote = await notesService.createNote(title, content, Number(userId));
 
     res.status(201).json(newNote);
   } catch (error) {

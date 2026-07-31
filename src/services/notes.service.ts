@@ -15,12 +15,14 @@ export const getNoteById = async (id: number) => {
 
 export const createNote = async (
   title: string,
-  content: string
+  content: string,
+  userId: number
 ) => {
   return await prisma.note.create({
     data: {
       title,
       content,
+      userId, // use unchecked create via FK to satisfy Prisma input
     },
   });
 };
