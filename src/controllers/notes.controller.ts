@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import * as notesService from "../services/notes.service";
 import { AppError } from "../errors/AppError";
+import { sendResponse } from "../utils/apiResponse";
 
 export const getAllNotes = async (
   req: Request,
@@ -12,7 +13,13 @@ export const getAllNotes = async (
 
     const notes = await notesService.getAllNotes(userId);
 
-    res.json(notes);
+    sendResponse(
+      res,
+      200,
+      "Notes retrieved successfully",
+      notes,
+      notes.length
+    );
   } catch (error) {
     next(error);
   }
@@ -33,7 +40,12 @@ export const getNoteById = async (
       throw new AppError("Note not found", 404);
     }
 
-    res.json(note);
+    sendResponse(
+      res,
+      200,
+      "Note retrieved successfully",
+      note
+    );
   } catch (error) {
     next(error);
   }
@@ -54,7 +66,12 @@ export const createNote = async (
       userId
     );
 
-    res.status(201).json(newNote);
+    sendResponse(
+      res,
+      201,
+      "Note created successfully",
+      newNote
+    );
   } catch (error) {
     next(error);
   }
@@ -77,7 +94,12 @@ export const updateNote = async (
       userId
     );
 
-    res.json(updatedNote);
+    sendResponse(
+      res,
+      200,
+      "Note updated successfully",
+      updatedNote
+    );
   } catch (error) {
     next(error);
   }
@@ -94,7 +116,11 @@ export const deleteNote = async (
 
     await notesService.deleteNote(id, userId);
 
-    res.status(204).send();
+    sendResponse(
+      res,
+      200,
+      "Note deleted successfully"
+    );
   } catch (error) {
     next(error);
   }

@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import * as authService from "../services/auth.service";
+import { sendResponse } from "../utils/apiResponse";
 
 export const register = async (
   req: Request,
@@ -15,11 +16,17 @@ export const register = async (
       password
     );
 
-    res.status(201).json(user);
+    sendResponse(
+      res,
+      201,
+      "User registered successfully",
+      user
+    );
   } catch (error) {
     next(error);
   }
 };
+
 export const login = async (
   req: Request,
   res: Response,
@@ -33,7 +40,12 @@ export const login = async (
       password
     );
 
-    res.json(result);
+    sendResponse(
+      res,
+      200,
+      "Login successful",
+      result
+    );
   } catch (error) {
     next(error);
   }

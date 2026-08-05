@@ -1,47 +1,70 @@
-# Notes API
+Notes API
 
-A RESTful Notes API built with **Node.js**, **Express**, and **TypeScript**, following a layered architecture used in real-world backend applications.
+REST API built with Node.js, Express, TypeScript,
+Prisma ORM and PostgreSQL.
 
-## Features
+------------------------------------------------------------
 
-- CRUD operations for notes
-- Express routing
-- Controllers and Services architecture
-- TypeScript interfaces (models)
-- Request validation middleware
-- Global error handling
-- RESTful API design
+Features
 
-## Tech Stack
+• JWT Authentication
+• User Authorization
+• CRUD Operations for Notes
+• Password Hashing (bcrypt)
+• PostgreSQL + Prisma ORM
+• Request Validation
+• Centralized Error Handling
+• Layered Architecture
 
-- Node.js
-- Express
-- TypeScript
+------------------------------------------------------------
 
-## Project Structure
+Tech Stack
 
-```text
-src/
-├── controllers/
-├── services/
-├── routes/
-├── models/
-├── middleware/
-├── errors/
-├── app.ts
-└── server.ts
-```
+Node.js
+Express.js
+TypeScript
+PostgreSQL
+Prisma ORM
+JWT
+bcrypt
 
-## API Endpoints
+------------------------------------------------------------
 
-| Method | Endpoint | Description |
-|---------|----------|-------------|
-| GET | /notes | Get all notes |
-| GET | /notes/:id | Get a note by ID |
-| POST | /notes | Create a note |
-| PUT | /notes/:id | Update a note |
-| DELETE | /notes/:id | Delete a note |
+Getting Started
 
-## Status
+git clone ...
+npm install
+npx prisma migrate dev
+npm run dev
 
-🚧 In Progress
+------------------------------------------------------------
+
+Environment Variables
+
+PORT=
+DATABASE_URL=
+JWT_SECRET=
+
+------------------------------------------------------------
+
+API Endpoints
+
+POST   /auth/register
+POST   /auth/login
+
+GET    /notes
+GET    /notes/:id
+POST   /notes
+PUT    /notes/:id
+DELETE /notes/:id
+
+------------------------------------------------------------
+
+Future Improvements
+
+- Docker
+- Swagger
+- Refresh Tokens
+- Pagination
+- Search
+- CI/CD
