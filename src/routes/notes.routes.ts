@@ -10,8 +10,11 @@ import {
 
 import { validateNote } from "../middleware/validateNote";
 import { validateId } from "../middleware/validateId";
+import { authenticate } from "../middleware/authenticate";
 
 const router = Router();
+
+router.use(authenticate);
 
 router.get("/", getAllNotes);
 

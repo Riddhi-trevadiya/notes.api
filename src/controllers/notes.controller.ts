@@ -8,7 +8,9 @@ export const getAllNotes = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const notes = await notesService.getAllNotes();
+    const userId = req.user!.userId;
+
+    const notes = await notesService.getAllNotes(userId);
 
     res.json(notes);
   } catch (error) {
@@ -23,8 +25,9 @@ export const getNoteById = async (
 ): Promise<void> => {
   try {
     const id = Number(req.params.id);
+    const userId = req.user!.userId;
 
-    const note = await notesService.getNoteById(id);
+    const note = await notesService.getNoteById(id, userId);
 
     if (!note) {
       throw new AppError("Note not found", 404);
@@ -42,13 +45,14 @@ export const createNote = async (
   next: NextFunction
 ): Promise<void> => {
   try {
-    const { title, content, userId } = req.body;
+    const { title, content } = req.body;
+    const userId = req.user!.userId;
 
-    if (!userId) {
-      throw new AppError("userId is required", 400);
-    }
-
-    const newNote = await notesService.createNote(title, content, Number(userId));
+    const newNote = await notesService.createNote(
+      title,
+      content,
+      userId
+    );
 
     res.status(201).json(newNote);
   } catch (error) {
@@ -63,13 +67,14 @@ export const updateNote = async (
 ): Promise<void> => {
   try {
     const id = Number(req.params.id);
-
     const { title, content } = req.body;
+    const userId = req.user!.userId;
 
     const updatedNote = await notesService.updateNote(
       id,
       title,
-      content
+      content,
+      userId
     );
 
     res.json(updatedNote);
@@ -85,8 +90,9 @@ export const deleteNote = async (
 ): Promise<void> => {
   try {
     const id = Number(req.params.id);
+    const userId = req.user!.userId;
 
-    await notesService.deleteNote(id);
+    await notesService.deleteNote(id, userId);
 
     res.status(204).send();
   } catch (error) {

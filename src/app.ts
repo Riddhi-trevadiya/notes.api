@@ -1,7 +1,7 @@
 import express from "express";
 import { logger } from "./middleware/logger";
 import notesRoutes from "./routes/notes.routes";
-    import authRoutes from "./routes/auth.routes";
+import authRoutes from "./routes/auth.routes";
 import { errorHandler } from "./middleware/errorHandler";
 
 const app = express();

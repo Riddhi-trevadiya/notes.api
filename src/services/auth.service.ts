@@ -55,14 +55,14 @@ export const loginUser = async (
 
   if (!isPasswordValid) {
     throw new AppError("Invalid email or password", 401);
-  }const token = jwt.sign(
-  {
-    userId: user.id,
-  },
-  process.env.JWT_SECRET as string,
-  {
-    expiresIn: "1h",
-  }
-);
+  } const token = jwt.sign(
+    {
+      userId: user.id,
+    },
+    process.env.JWT_SECRET as string,
+    {
+      expiresIn: "1h",
+    }
+  );
   return { token };
 };
