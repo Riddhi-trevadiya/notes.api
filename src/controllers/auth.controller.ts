@@ -20,3 +20,21 @@ export const register = async (
     next(error);
   }
 };
+export const login = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> => {
+  try {
+    const { email, password } = req.body;
+
+    const result = await authService.loginUser(
+      email,
+      password
+    );
+
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+};
